@@ -1,0 +1,316 @@
+
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- Font Awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+                <i class="fas fa-toolbox me-2"></i>Tool<span>Nest</span>
+            </a>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'home' %}">
+                            <i class="fas fa-home me-1"></i> Home
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'urlshorten' %}">
+                            <i class="fas fa-link me-1"></i> URL Shortener
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'resizeimage' %}">
+                            <i class="fas fa-image me-1"></i> Image Resizer
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">
+                            <i class="fas fa-exchange-alt me-1"></i> Convertly
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'download' %}">
+                            <i class="fas fa-download me-1"></i> Downloader
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    
+    
+    {% block content %}
+    
+    {% endblock %}
+    
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="container">
+            <!-- Main Footer Content -->
+            <div class="row gy-4">
+                <!-- Brand and About Section -->
+                <div class="col-lg-4 mb-lg-0">
+                    <div class="footer-brand-box p-4 rounded-4" style="background: linear-gradient(145deg, rgba(108, 99, 255, 0.1), rgba(108, 99, 255, 0.05)); border: 1px solid var(--border-color);">
+                        <h5 class="fw-bold d-flex align-items-center">
+                            <i class="fas fa-toolbox me-2" style="color: var(--accent-color);"></i>
+                            Tool<span style="background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Nest</span>
+                        </h5>
+                        <p class="mb-4 ps-1">Your comprehensive toolbox for everyday digital tasks. Streamline your workflow with our powerful online utilities designed for professionals and casual users alike.</p>
+                    
+                        <h6 class="mb-3 ps-1 position-relative">
+                            Follow Us
+                            <span class="position-absolute bottom-0 start-0" style="width: 40px; height: 3px; background: linear-gradient(90deg, var(--accent-color), transparent);"></span>
+                        </h6>
+                        <div class="d-flex flex-wrap gap-2 ps-1">
+                            <a href= "https://www.linkedin.com/in/hafiz-muhammad-owais-zafar" class="social-icon text-white hover-float">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://www.facebook.com/share/18fJTgXmz3/" class="social-icon text-white hover-float">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="social-icon text-white hover-float">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="https://github.com/OwaisZafar01" class="social-icon text-white hover-glow" style="background: linear-gradient(45deg, var(--primary-color), var(--accent-color));">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Our Tools Box -->
+                <div class="col-lg-4">
+                    <div class="tools-box p-4 rounded-4 h-100" style="background: linear-gradient(145deg, rgba(108, 99, 255, 0.1), rgba(108, 99, 255, 0.05)); border: 1px solid var(--border-color);">
+                        <h6 class="position-relative mb-4">
+                            Our Tools
+                            <span class="position-absolute bottom-0 start-0" style="width: 40px; height: 3px; background: linear-gradient(90deg, var(--accent-color), transparent);"></span>
+                        </h6>
+                        <ul class="list-unstyled footer-links">
+                            <li>
+                                <a href="{% url 'urlshorten' %}" class="d-flex align-items-center">
+                                    <span class="footer-icon-box me-2" style="background: rgba(108, 99, 255, 0.1);">
+                                        <i class="fas fa-link" style="color: var(--primary-color);"></i>
+                                    </span>
+                                    URL Shortener
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'resizeimage' %}" class="d-flex align-items-center">
+                                    <span class="footer-icon-box me-2" style="background: rgba(25, 135, 84, 0.1);">
+                                        <i class="fas fa-image" style="color: #198754;"></i>
+                                    </span>
+                                    Image Resizer
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'index' %}" class="d-flex align-items-center">
+                                    <span class="footer-icon-box me-2" style="background: rgba(255, 193, 7, 0.1);">
+                                        <i class="fas fa-exchange-alt" style="color: #ffc107;"></i>
+                                    </span>
+                                    Convertly
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'download' %}" class="d-flex align-items-center">
+                                    <span class="footer-icon-box me-2" style="background: rgba(220, 53, 69, 0.1);">
+                                        <i class="fas fa-download" style="color: #dc3545;"></i>
+                                    </span>
+                                    Downloader
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            
+                
+                <!-- Newsletter and Contact -->
+                <div class="col-lg-4">
+                    <div class="newsletter-box p-4 rounded-4" style="background: linear-gradient(145deg, rgba(255, 107, 107, 0.1), rgba(255, 107, 107, 0.05)); border: 1px solid var(--border-color);">
+                        <h6 class="position-relative mb-3">
+                            Stay Updated
+                            <span class="position-absolute bottom-0 start-0" style="width: 40px; height: 3px; background: linear-gradient(90deg, var(--accent-color), transparent);"></span>
+                        </h6>
+                        <p class="mb-3">Get the latest updates about new tools and features directly to your inbox.</p>
+                        
+                        <div class="subscribe-form position-relative">
+                            <form id="subscribeForm" method="post">
+                                {% csrf_token %}
+                                <input type="email" name="email" class="form-control" placeholder="Your email address" style="padding-right: 45px;" required>
+                                <button type="submit" class="btn position-absolute top-0 end-0 h-100 d-flex align-items-center justify-content-center" style="width: 45px; background: var(--primary-color); border-radius: 0 12px 12px 0;">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h6 class="position-relative mb-3">
+                                Contact Us
+                                <span class="position-absolute bottom-0 start-0" style="width: 40px; height: 3px; background: linear-gradient(90deg, var(--accent-color), transparent);"></span>
+                            </h6>
+                            
+                            <div class="contact-item d-flex align-items-center mb-3 ps-1">
+                                <div class="contact-icon-box me-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: linear-gradient(145deg, rgba(108, 99, 255, 0.15), rgba(108, 99, 255, 0.05)); border: 1px solid rgba(108, 99, 255, 0.2);">
+                                    <i class="fas fa-map-marker-alt" style="color: var(--primary-color);"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 text-secondary">Karachi, Pakistan</p>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item d-flex align-items-center mb-3 ps-1">
+                                <div class="contact-icon-box me-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: linear-gradient(145deg, rgba(255, 107, 107, 0.15), rgba(255, 107, 107, 0.05)); border: 1px solid rgba(255, 107, 107, 0.2);">
+                                    <i class="fas fa-envelope" style="color: var(--accent-color);"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 text-secondary">owaiszafar2004@gmail.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item d-flex align-items-center ps-1">
+                                <div class="contact-icon-box me-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: linear-gradient(145deg, rgba(108, 99, 255, 0.15), rgba(108, 99, 255, 0.05)); border: 1px solid rgba(108, 99, 255, 0.2);">
+                                    <i class="fas fa-phone-alt" style="color: var(--primary-color);"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 text-secondary">+92 321 1228142</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <hr class="my-4" style="opacity: 0.1; border-color: var(--border-color);">
+        
+            <div class="row align-items-center justify-content-center py-3">
+                <div class="col-md-6 d-flex justify-content-center">
+                    <div class="copyright d-flex align-items-center">
+                        <span class="copyright-icon me-2 rounded-circle d-flex align-items-center justify-content-center"
+                            style="width: 28px; height: 28px; background: linear-gradient(145deg, rgba(108, 99, 255, 0.15), rgba(108, 99, 255, 0.05)); border: 1px solid rgba(108, 99, 255, 0.2);">
+                            <i class="fas fa-copyright" style="font-size: 12px; color: var(--primary-color);"></i>
+                        </span>
+                        <span>2025 ToolNest. All rights reserved.</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </footer>
+
+    <!-- Toast Notification for Subscribe -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="subscribeToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header" style="background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); color: white;">
+                <i class="fas fa-bell me-2"></i>
+                <strong class="me-auto">ToolNest</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toastMessage">
+                Thanks for subscribing!
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AJAX for newsletter subscription -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const subscribeForm = document.getElementById('subscribeForm');
+        const subscribeToast = new bootstrap.Toast(document.getElementById('subscribeToast'));
+        
+        if (subscribeForm) {
+            subscribeForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const email = formData.get('email');
+                
+                fetch('/subscribe/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const toastMessage = document.getElementById('toastMessage');
+                    
+                    if (data.success) {
+                        // Success message
+                        toastMessage.textContent = data.message;
+                        subscribeForm.reset();
+                    } else {
+                        // Handle errors (like duplicate email)
+                        if (data.errors) {
+                            const errorData = JSON.parse(data.errors);
+                            if (errorData.email) {
+                                const emailError = errorData.email[0];
+                                if (emailError.code === 'unique') {
+                                    toastMessage.textContent = 'This email is already subscribed!';
+                                } else {
+                                    toastMessage.textContent = emailError.message;
+                                }
+                            }
+                        } else {
+                            toastMessage.textContent = 'There was an error with your submission. Please try again.';
+                        }
+                    }
+                    
+                    // Show toast notification
+                    subscribeToast.show();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('toastMessage').textContent = 'An error occurred. Please try again later.';
+                    subscribeToast.show();
+                });
+            });
+        }
+    });
+    </script>
+</body>
+</html>
