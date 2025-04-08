@@ -1,0 +1,434 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+    :root {
+        --primary: #7E57FF;         
+        --primary-light: #9D7FFF;   
+        --primary-dark: #6A3AFF;    
+        --dark: #14141F;            
+        --darker: #0d0d17;          
+        --card-bg: #1F1F35;         
+        --text-light: #F1F1FF;      
+        --text-muted: #A9A9D0;      
+        --success: #00E1AA;         
+        --success-dark: #00CB9A;    
+        --button-hover: #6A3AFF;
+        --accent-yellow: #FFD166;   
+        --accent-orange: #FF7E5F;   
+        --accent-teal: #4ECDC4;    
+      }
+      
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--dark);
+        color: var(--text-light);
+        background-image: radial-gradient(circle at 80% 10%, rgba(108, 99, 255, 0.06) 0%, transparent 60%),
+                          radial-gradient(circle at 20% 90%, rgba(255, 101, 132, 0.06) 0%, transparent 60%);
+      }
+      
+      .app-wrapper {
+        min-height: 100vh;
+        padding: 2rem 0;
+      }
+      
+      .main-card {
+        border-radius: 1.25rem;
+        border: none;
+        background: var(--card-bg);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(126, 87, 255, 0.1);
+      }
+      
+      .main-card:hover {
+        box-shadow: 0 15px 35px rgba(126, 87, 255, 0.25);
+        transform: translateY(-2px);
+      }
+      
+      .app-header {
+        position: relative;
+        padding-bottom: 2rem;
+      }
+      
+      .app-title {
+        font-weight: 700;
+        font-size: 2.5rem;
+        color: white;
+        margin-bottom: 0.25rem;
+        background: linear-gradient(135deg, var(--text-light) 0%, var(--text-light) 60%, var(--primary-light) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        letter-spacing: -0.5px;
+      }
+      
+      .app-title span {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--accent-teal) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      
+      .app-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+      }
+      
+      .search-form {
+        position: relative;
+        z-index: 2;
+      }
+      
+      .search-input-group {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        border-radius: 1rem;
+        overflow: hidden;
+        display: flex;
+        height: 64px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(126, 87, 255, 0.15);
+      }
+      
+      .search-input {
+        flex-grow: 1;
+        border: none;
+        padding: 0 1.5rem;
+        font-size: 1rem;
+        background: transparent;
+        color: var(--text-light);
+      }
+      
+      .search-input::placeholder {
+        color: var(--text-muted);
+      }
+      
+      .search-input:focus {
+        outline: none;
+        box-shadow: none;
+      }
+      
+      .search-button {
+        min-width: 140px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent-teal) 100%);
+        color: white;
+        border: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 15px rgba(126, 87, 255, 0.4);
+      }
+      
+      .search-button:hover {
+        background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+        transform: translateX(3px) translateY(-1px);
+        box-shadow: 0 8px 20px rgba(126, 87, 255, 0.5);
+      }
+      
+      .platform-icons {
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+      }
+      
+      .platform-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: var(--text-muted);
+        transition: all 0.3s ease;
+      }
+      
+      .platform-icon:hover {
+        color: var(--text-light);
+        transform: translateY(-3px);
+      }
+      
+      .platform-icon i {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+      }
+      
+      .platform-icon.youtube i {
+        color: #FF0000;
+        filter: drop-shadow(0 2px 8px rgba(255, 0, 0, 0.5));
+      }
+      
+      .platform-icon.facebook i {
+        color: #1877F2;
+        filter: drop-shadow(0 2px 8px rgba(24, 119, 242, 0.5));
+      }
+      
+      .platform-icon.instagram i {
+        color: #E1306C;
+        filter: drop-shadow(0 2px 8px rgba(225, 48, 108, 0.5));
+      }
+      
+      .video-container {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 1rem 1rem 0 0;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        background: #000;
+        aspect-ratio: 16/9;
+        max-height: 350px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      
+      .video-container video,
+      .video-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+      
+      .source-badge {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        color: white;
+        font-weight: 600;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      }
+      
+      .source-badge.youtube {
+        background: linear-gradient(135deg, rgba(255, 0, 0, 0.85) 0%, rgba(200, 0, 0, 0.85) 100%);
+      }
+      
+      .source-badge.facebook {
+        background: linear-gradient(135deg, rgba(24, 119, 242, 0.85) 0%, rgba(10, 90, 200, 0.85) 100%);
+      }
+      
+      .source-badge.instagram {
+        background: linear-gradient(135deg, rgba(225, 48, 108, 0.85) 0%, rgba(193, 53, 132, 0.85) 100%);
+      }
+      
+      .video-info {
+        padding: 1.5rem;
+        background: linear-gradient(to bottom, rgba(30, 30, 45, 0.7), var(--card-bg));
+        backdrop-filter: blur(10px);
+      }
+      
+      .download-button {
+        background: linear-gradient(135deg, var(--accent-teal) 0%, var(--success) 100%);
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        padding: 1rem 2.2rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        transition: all 0.3s ease;
+        min-width: 220px;
+        box-shadow: 0 6px 15px rgba(0, 225, 170, 0.3);
+      }
+      
+      .download-button:hover {
+        background: linear-gradient(135deg, var(--success) 0%, var(--accent-teal) 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 225, 170, 0.45);
+      }
+      
+      .download-button i {
+        font-size: 1.2rem;
+      }
+      
+      .error-alert {
+        background-color: rgba(255, 75, 75, 0.1);
+        border: 1px solid rgba(255, 75, 75, 0.3);
+        border-radius: 1rem;
+        color: #FF4B4B;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 4px 12px rgba(255, 75, 75, 0.1);
+      }
+      
+      .error-alert i {
+        font-size: 1.5rem;
+      }
+      
+      .feature-badge {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      
+      .badge-popular {
+        background-color: #1E88E5;
+        color: white;
+      }
+      
+      .badge-new {
+        background-color: #E53935;
+        color: white;
+      }
+      
+      .glow {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        filter: blur(90px);
+        z-index: 0;
+        pointer-events: none;
+      }
+      
+      .glow-1 {
+        top: 10%;
+        left: 15%;
+        background: var(--primary);
+        animation: pulse-1 8s infinite alternate;
+        opacity: 0.25;
+      }
+      
+      .glow-2 {
+        bottom: 20%;
+        right: 10%;
+        background: var(--secondary);
+        animation: pulse-2 10s infinite alternate;
+        opacity: 0.2;
+      }
+      
+      @keyframes pulse-1 {
+        0% { opacity: 0.2; transform: scale(1); }
+        100% { opacity: 0.3; transform: scale(1.2); }
+      }
+      
+      @keyframes pulse-2 {
+        0% { opacity: 0.15; transform: scale(1.2); }
+        100% { opacity: 0.1; transform: scale(1); }
+      }
+      
+      @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-12px); }
+        100% { transform: translateY(0px); }
+      }
+      
+      .float-animation {
+        animation: float 6s ease-in-out infinite;
+      }
+   
+  
+</style>
+
+<div class="container-fluid app-wrapper position-relative">
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+      <div class="app-header text-center">
+        <h1 class="app-title mb-3">
+          <i class="fas fa-cloud-download-alt me-2"></i>
+          <span> Video Downloader</span>
+        </h1>
+        <p class="app-subtitle">Download videos from YouTube, Facebook, and Instagram</p>
+      </div>
+      
+      <div class="main-card mb-4 float-animation shadow">
+        <div class="card-body p-4">
+          <form action="" method="get" class="search-form">
+            <div class="search-input-group mb-3">
+              <input type="text" class="form-control search-input border-0 bg-transparent" name="url" placeholder="Paste video URL here..." required>
+              <button class="btn search-button" type="submit" id="analyzeBtn">
+                <i class="fas fa-bolt me-1"></i>
+                <span>Extract</span>
+              </button>
+            </div>
+          </form>
+          
+          <div class="platform-icons d-flex justify-content-center">
+            <div class="platform-icon youtube d-flex flex-column align-items-center">
+              <i class="fab fa-youtube"></i>
+              <span>YouTube</span>
+            </div>
+            <div class="platform-icon facebook d-flex flex-column align-items-center">
+              <i class="fab fa-facebook"></i>
+              <span>Facebook</span>
+            </div>
+            <div class="platform-icon instagram d-flex flex-column align-items-center">
+              <i class="fab fa-instagram"></i>
+              <span>Instagram</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {% if video_info %}
+      <div class="main-card shadow">
+        <div class="video-container position-relative">
+          {% if video_info.direct_url %}
+          <video controls poster="{{ video_info.thumbnail }}" id="videoPreview" class="w-100 h-100">
+            <source src="{{ video_info.direct_url }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          {% else %}
+          <img src="{{ video_info.thumbnail }}" alt="Video thumbnail" class="w-100 h-100">
+          {% endif %}
+          
+          <div class="source-badge 
+            {% if video_info.source == 'youtube' %}youtube
+            {% elif video_info.source == 'facebook' %}facebook
+            {% elif video_info.source == 'instagram' %}instagram{% endif %}">
+            <i class="fab fa-{{ video_info.source }}"></i>
+            <span>{{ video_info.source|title }}</span>
+          </div>
+        </div>
+        
+        <div class="video-info text-center d-flex justify-content-center align-items-center py-4">
+          {% if video_info.formats and video_info.formats.0 %}
+          <a href="{% url 'download_file' %}?url={{ video_info.original_url|urlencode }}&source={{ video_info.source }}&format_id={{ video_info.formats.0.format_id }}" 
+             class="btn download-button">
+            <i class="fas fa-download"></i> 
+            <span>Download Now</span>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+      
+      {% if error_message %}
+      <div class="alert error-alert mt-4 d-flex align-items-center" role="alert">
+        <i class="fas fa-exclamation-circle"></i>
+        <div>
+          <strong>Oops!</strong> {{ error_message }}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+{% endblock %}
