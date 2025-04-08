@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+{% block title %}Home Page{% endblock title %}
+
+{% block content %}
+
+
+<!-- Page Content -->
+<div class="content-wrapper">
+    <div class="container">
+        <!-- Sample Content for Preview - This would be replaced by block content -->
+        <div class="row mb-5">
+            <div class="col-lg-7">
+                <div class="mb-4 position-relative">
+                    <span class="badge badge-custom mb-2">All-in-one solution</span>
+                    <h1 class="display-4 fw-bold mb-3">Powerful Online Tools<br>for <span class="text-primary">Everyday Tasks</span></h1>
+                    <p class="lead text-secondary mb-4">Streamline your workflow with our comprehensive collection of online utilities designed for professionals and casual users alike.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#tools" class="btn btn-custom px-4 py-2">
+                            <i class="fas fa-rocket me-2"></i> Explore Tools
+                        </a>
+                
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 d-flex align-items-center justify-content-center">
+                <div class="p-2 rounded-4 position-relative" style="background: linear-gradient(45deg, rgba(108, 99, 255, 0.1), rgba(255, 107, 107, 0.1));">
+                    <img src="{% static 'Images/hero.jpg'%}" alt="Tools Illustration" class="img-fluid rounded-4 border border-secondary">
+                    <div class="position-absolute" style="top: -15px; right: -15px;">
+                        <span class="badge bg-primary p-2 rounded-pill">
+                            <i class="fas fa-bolt me-1"></i> New Features
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Featured Tools -->
+        <div class="my-5 pt-2" id="tools">
+            <div class="text-center mb-5">
+                <span class="badge badge-accent mb-2">Featured Tools</span>
+                <h2 class="fw-bold">Our Most Popular Utilities</h2>
+                <p class="text-secondary mx-auto" style="max-width: 700px;">Discover our collection of powerful online tools designed to help you accomplish tasks quickly and efficiently.</p>
+            </div>
+            
+            <div class="row g-4">
+                <!-- Tool Card 1 -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="tool-card">
+                        <div class="position-relative">
+                            <img src="{% static 'Images/url_shortener.png'  %}" class="card-img-top" alt="URL Shortener">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-primary rounded-pill px-3 py-2">
+                                    <i class="fas fa-fire me-1"></i> Popular
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-3">
+                                    <i class="fas fa-link text-primary"></i>
+                                </div>
+                                <h5 class="card-title mb-0">URL Shortener</h5>
+                            </div>
+                            <p class="card-text">Create short and shareable links from long URLs for easy access and tracking.</p>
+                            <a href="{% url 'urlshorten' %}" class="btn btn-custom w-100">Shorten URL</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tool Card 2 -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="tool-card">
+                        <div class="position-relative">
+                            <img src="{% static 'Images/image_resizer.png'%}" class="card-img-top" alt="Image Resizer">
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="rounded-circle bg-success bg-opacity-10 p-2 me-3">
+                                    <i class="fas fa-image text-success"></i>
+                                </div>
+                                <h5 class="card-title mb-0">Image Resizer</h5>
+                            </div>
+                            <p class="card-text">Resize and convert images online with our fast and free tool.</p>
+                            <a href="{% url 'resizeimage' %}" class="btn btn-custom w-100">Resize Images</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tool Card 3 -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="tool-card">
+                        <div class="position-relative">
+                            <img src="{% static 'Images/convertly.png'%}" class="card-img-top" alt="Convertly">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-danger rounded-pill px-3 py-2">
+                                    <i class="fas fa-star me-1"></i> New
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="rounded-circle bg-warning bg-opacity-10 p-2 me-3">
+                                    <i class="fas fa-exchange-alt text-warning"></i>
+                                </div>
+                                <h5 class="card-title mb-0">Convertly</h5>
+                            </div>
+                            <p class="card-text">Convertly makes file conversion simple — supporting all major document and image formats.</p>
+                            <a href="{% url 'index' %}" class="btn btn-custom w-100">Convert Files</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tool Card 4 -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="tool-card">
+                        <div class="position-relative">
+                            <img src="{% static 'Images/download.png'%}" class="card-img-top" alt="Downloader">
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="rounded-circle bg-danger bg-opacity-10 p-2 me-3">
+                                    <i class="fas fa-download text-danger"></i>
+                                </div>
+                                <h5 class="card-title mb-0">Downloader</h5>
+                            </div>
+                            <p class="card-text">Download videos and audio from platforms like YouTube, Facebook, and Instagram.</p>
+                            <a href="{% url 'download' %}" class="btn btn-custom w-100">Download Videos</a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+
+
+        
+    </div>
+
+</div>
+
+{% endblock %}
