@@ -1,0 +1,671 @@
+
+{% extends "base.html" %}
+
+{% block title %}Image Resizer{% endblock title %}
+
+{% block content %}
+
+<div class="bg-element bg-element-1"></div>
+<div class="bg-element bg-element-2"></div>
+<div class="bg-element bg-element-3"></div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-10">
+        
+        <div class="text-center mb-4">
+        <h1>Image Resizer</h1>
+        <p class="subtitle">Resize and convert images online with our fast and modern tool.</p>
+        </div>
+    
+        <div class="card p-4 p-md-5 mb-5">
+        <div class="glow"></div>
+        
+        <form method="POST" enctype="multipart/form-data" id="resizeForm">
+            {% csrf_token %}
+            
+            <div class="upload-area mb-4" id="uploadArea">
+            <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h5 class="mb-3">Drop your image here or</h5>
+            <label for="image" class="browse-btn">
+                Browse Files
+            </label>
+            <input type="file" class="form-control d-none" id="image" name="image" accept="image/*" required>
+            <p class="support-text">Supports: JPG, PNG, GIF, WEBP (Max 10MB)</p>
+            
+            <div id="imagePreviewContainer" class="mt-4 text-center d-none">
+                <img id="imagePreview" class="img-fluid mb-2" src="" alt="Preview">
+                <button type="button" id="removeImage" class="btn-close bg-danger"></button>
+                <p id="imageInfo" class="small text-secondary mt-2"></p>
+            </div>
+            </div>
+            
+            <div class="tab-container d-flex mb-4">
+            <button type="button" class="tab-button active" id="presetTabBtn">Preset Sizes</button>
+            <button type="button" class="tab-button" id="customTabBtn">Custom Size</button>
+            <input type="hidden" name="sizeType" id="sizeType" value="preset">
+            </div>
+            
+            <div id="presetTab" class="tab-content">
+            <div class="form-group mb-4">
+                <label for="presetSize" class="form-label">Choose a preset size</label>
+                <select class="form-select" id="presetSize" name="presetSize">
+                <option value="passport">Passport Photo (1024 x 1536 px)</option>
+                <option value="profile">Profile Picture (500 x 500 px)</option>
+                <option value="square">Instagram Square (1080 x 1080 px)</option>
+                <option value="3x4">3x4 Photo (1200 x 1800 px)</option>
+                <option value="4x6">4x6 Photo (1600 x 2400 px)</option>
+                <option value="5x7">5x7 Photo (2000 x 2800 px)</option>
+                <option value="A4">A4 Document (2480 x 3508 px)</option>
+                <option value="hd">HD Wallpaper (1920 x 1080 px)</option>
+                <option value="facebook">Facebook Cover (1640 x 856 px)</option>
+                <option value="twitter">Twitter Header (1500 x 500 px)</option>
+                <option value="linkedin">LinkedIn Background (1584 x 396 px)</option>
+                </select>
+            </div>
+            </div>
+            
+            <div id="customTab" class="tab-content d-none">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                <div class="form-group mb-3 mb-md-0">
+                    <label for="width" class="form-label">Width (pixels)</label>
+                    <input type="number" class="form-control" id="width" name="width" min="1" placeholder="Width">
+                </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="height" class="form-label">Height (pixels)</label>
+                    <input type="number" class="form-control" id="height" name="height" min="1" placeholder="Height">
+                </div>
+                </div>
+            </div>
+            <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="maintainAspectRatio" checked>
+                <label class="form-check-label" for="maintainAspectRatio">
+                Maintain aspect ratio
+                </label>
+            </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="mb-4">
+            <label class="form-label">Format Options</label>
+            <div class="format-options">
+                <input type="radio" class="d-none" name="format" id="formatOriginal" value="original" checked>
+                <label class="format-option active" for="formatOriginal" data-format="original">Original</label>
+                
+                <input type="radio" class="d-none" name="format" id="formatJPG" value="jpg">
+                <label class="format-option" for="formatJPG" data-format="jpg">JPG</label>
+                
+                <input type="radio" class="d-none" name="format" id="formatPNG" value="png">
+                <label class="format-option" for="formatPNG" data-format="png">PNG</label>
+                
+                <input type="radio" class="d-none" name="format" id="formatWEBP" value="webp">
+                <label class="format-option" for="formatWEBP" data-format="webp">WEBP</label>
+            </div>
+            </div>
+            
+            <button type="submit" class="resize-btn w-100">
+            <i class="fas fa-magic me-2"></i>Resize & Download
+            </button>
+        </form>
+        </div>
+    </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('resizeForm');
+    const imageInput = document.getElementById('image');
+    const imagePreview = document.getElementById('imagePreview');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    const imageInfo = document.getElementById('imageInfo');
+    const removeImageBtn = document.getElementById('removeImage');
+    const uploadArea = document.getElementById('uploadArea');
+    const presetTabBtn = document.getElementById('presetTabBtn');
+    const customTabBtn = document.getElementById('customTabBtn');
+    const presetTab = document.getElementById('presetTab');
+    const customTab = document.getElementById('customTab');
+    const sizeTypeInput = document.getElementById('sizeType');
+    const widthInput = document.getElementById('width');
+    const heightInput = document.getElementById('height');
+    const maintainAspectRatio = document.getElementById('maintainAspectRatio');
+    const formatOptions = document.querySelectorAll('.format-option');
+    
+    let originalWidth = 0;
+    let originalHeight = 0;
+    let aspectRatio = 0;
+    
+    presetTabBtn.addEventListener('click', function() {
+        presetTabBtn.classList.add('active');
+        customTabBtn.classList.remove('active');
+        presetTab.classList.remove('d-none');
+        customTab.classList.add('d-none');
+        sizeTypeInput.value = 'preset';
+    });
+    
+    customTabBtn.addEventListener('click', function() {
+        customTabBtn.classList.add('active');
+        presetTabBtn.classList.remove('active');
+        customTab.classList.remove('d-none');
+        presetTab.classList.add('d-none');
+        sizeTypeInput.value = 'custom';
+    });
+    
+    formatOptions.forEach(option => {
+        option.addEventListener('click', function() {
+        formatOptions.forEach(o => o.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById(this.getAttribute('for')).checked = true;
+        });
+    });
+    
+    imageInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+        const file = this.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            imagePreview.src = e.target.result;
+            imagePreviewContainer.classList.remove('d-none');
+            
+            const img = new Image();
+            img.onload = function() {
+            originalWidth = img.width;
+            originalHeight = img.height;
+            aspectRatio = originalWidth / originalHeight;
+            
+            const fileSizeInKB = Math.round(file.size / 1024);
+            imageInfo.textContent = `${file.name} (${originalWidth}×${originalHeight}, ${fileSizeInKB} KB)`;
+            
+            widthInput.value = originalWidth;
+            heightInput.value = originalHeight;
+            };
+            img.src = e.target.result;
+        };
+        
+        reader.readAsDataURL(file);
+        }
+    });
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight() {
+        uploadArea.classList.add('drag-over');
+    }
+    
+    function unhighlight() {
+        uploadArea.classList.remove('drag-over');
+    }
+    
+    uploadArea.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length) {
+        imageInput.files = files;
+        const event = new Event('change');
+        imageInput.dispatchEvent(event);
+        }
+    }
+    
+    removeImageBtn.addEventListener('click', function() {
+        imageInput.value = '';
+        imagePreviewContainer.classList.add('d-none');
+    });
+    
+    widthInput.addEventListener('input', function() {
+        if (maintainAspectRatio.checked && aspectRatio > 0) {
+        heightInput.value = Math.round(widthInput.value / aspectRatio);
+        }
+    });
+    
+    heightInput.addEventListener('input', function() {
+        if (maintainAspectRatio.checked && aspectRatio > 0) {
+        widthInput.value = Math.round(heightInput.value * aspectRatio);
+        }
+    });
+    
+    uploadArea.addEventListener('mousemove', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        this.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(15, 15, 30, 0.8), rgba(10, 10, 25, 0.9))`;
+    });
+    
+    uploadArea.addEventListener('mouseleave', function() {
+        this.style.background = `linear-gradient(145deg, rgba(15, 15, 30, 0.6), rgba(20, 20, 40, 0.8))`;
+    });
+    });
+</script>
+
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --primary: #10b981;
+    --secondary: #059669;
+    --dark: #111827;
+    --darker: #0c131e;
+    --light: #f8f9fa;
+    --accent: #f97316;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --card-bg: #1f2937;
+    --card-darker: #161e2b;
+    --border-color: rgba(255, 255, 255, 0.08);
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+   
+    background-attachment: fixed;
+    color: var(--text-primary);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 40vw;
+    height: 40vw;
+   
+    z-index: -1;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 30vw;
+    height: 30vw;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+    z-index: -1;
+}
+
+h1 {
+    font-weight: 800;
+    font-size: 2.75rem;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 0.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.text-gradient {
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+    margin-top: 1rem;
+    letter-spacing: 0.5px;
+}
+
+.card {
+    border: none;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    position: relative;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    z-index: 2;
+}
+
+.glow {
+    position: absolute;
+    top: -100px;
+    left: -100px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+    animation: float 6s ease-in-out infinite alternate;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(30px, 30px) scale(1.2); }
+}
+
+.upload-area {
+    border: 2px dashed rgba(16, 185, 129, 0.3);
+    background: linear-gradient(145deg, rgba(17, 24, 39, 0.6), rgba(31, 41, 55, 0.8));
+    border-radius: 16px;
+    min-height: 220px;
+    position: relative;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+.upload-area:hover, .upload-area.drag-over {
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+    transform: translateY(-2px);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    height: 60px;
+    width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    border-radius: 50%;
+    color: white;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.25);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+    70% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.upload-icon i {
+    font-size: 1.5rem;
+}
+
+.browse-btn {
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    border: none;
+    border-radius: 30px;
+    padding: 0.6rem 1.8rem;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.25);
+    transition: all 0.3s ease;
+    transform: translateY(0);
+    position: relative;
+    z-index: 2;
+}
+
+.browse-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+}
+
+.browse-btn:active {
+    transform: translateY(-1px);
+}
+
+.support-text {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-top: 1rem;
+}
+
+.tab-container {
+    background: var(--card-darker);
+    border-radius: 12px;
+    padding: 0.3rem;
+    margin-bottom: 1.5rem;
+}
+
+.tab-button {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: 50%;
+}
+
+.tab-button.active {
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    color: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.form-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.form-control, .form-select {
+    background-color: var(--card-darker);
+    border: 1px solid var(--border-color);
+    color: white;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--card-darker);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    color: white;
+}
+
+.format-options {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.format-option {
+    background: var(--card-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    flex: 1;
+    padding: 0.75rem 0;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.format-option:hover {
+    border-color: rgba(16, 185, 129, 0.5);
+}
+
+.format-option.active {
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.resize-btn {
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    border: none;
+    border-radius: 12px;
+    padding: 1rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.25);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.resize-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.resize-btn:hover::before {
+    left: 100%;
+}
+
+.resize-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.4);
+}
+
+.form-check-input {
+    width: 20px;
+    height: 20px;
+    margin-top: 0.15rem;
+    background-color: var(--card-darker);
+    border: 1px solid var(--border-color);
+}
+
+.form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.form-check-label {
+    padding-left: 0.5rem;
+    color: var(--text-secondary);
+}
+
+#imagePreviewContainer {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    border-radius: 10px;
+    max-width: 300px;
+    position: relative;
+}
+
+#imagePreview {
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#removeImage {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(249, 115, 22, 0.8);
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#removeImage:hover {
+    background: rgba(249, 115, 22, 1);
+    transform: scale(1.1);
+}
+
+.divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border-color), transparent);
+    margin: 2rem 0;
+}
+
+@media (max-width: 768px) {
+    .card {
+        padding: 1.5rem !important;
+    }
+    
+    h1 {
+        font-size: 2.25rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+}
+
+.bg-element {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.05;
+    z-index: -1;
+    animation: float-slow 15s infinite alternate ease-in-out;
+}
+
+@keyframes float-slow {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(20px, 20px) scale(1.1); }
+    100% { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+</style>
+
+{% endblock %}
+
+
+
+
+
+
+
+
