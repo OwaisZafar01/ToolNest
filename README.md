@@ -1,18 +1,15 @@
 
 <h1>ToolNest – A Full-Stack Web Application</h1>
 
-<p>Tweet App is a dynamic, <strong>full-stack web application</strong> designed for seamless real-time engagement.  
-Whether you're here to explore tweets, share your thoughts, or manage your posts, this platform ensures a  
-<strong>smooth</strong> and <strong>interactive</strong> experience.</p>
+<p>ToolNest is an all-in-one full-stack web application that makes everyday digital tasks easier. Built using modern web technologies, it combines four essential tools into a single platform, ensuring a seamless and efficient user experience</p>
 
 <h2>🌟 Key Features</h2>
 
-<p>✅ <strong>Guest Mode</strong> – Browse tweets without an account</p>
-<p>✅ <strong>User Authentication</strong> – Secure Signup, Login, and Logout</p>
-<p>✅ <strong>Personalized Feed</strong> – View your own tweets along with others' posts</p>
+<p>✅ <strong>URL Shortener</strong> – Quickly shorten long URLs, making them more manageable and ready for sharing.</p>
+<p>✅ <strong>Image Resizer</strong> – Resize and optimize images in multiple dimensions without compromising quality.</p>
+<p>✅ <strong>Video Downloader</strong> – Download videos from popular platforms like YouTube, Facebook, and Instagram in your preferred format.</p>
 <p>✅ <strong>Tweet Management</strong> – Create, Edit, and Delete tweets anytime</p>
-<p>✅ <strong>Multiple Tweets</strong> – Post as many tweets as you like, each linked to you</p>
-<p>✅ <strong>Interactive Experience</strong> – Engage with tweets and explore user-generated content</p>
+<p>✅ <strong>File Converter</strong> – Convert documents between formats (Word to PDF, PDF to Word, and more) effortlessly, ensuring you’re always ready to share your files in the right format.</p>
 
 <h2>🛠 Tech Stack</h2>
 
