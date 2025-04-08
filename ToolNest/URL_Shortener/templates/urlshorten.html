@@ -1,0 +1,426 @@
+
+
+{% extends "base.html" %}
+
+{% block title %}URL Shortener{% endblock %}
+
+{% block content %}
+
+
+<style>
+    :root {
+        --primary: #3a86ff;
+        --secondary: #ff006e;
+        --accent: #8338ec;
+        --dark: #151823;
+        --darker: #0d1117;
+        --light: #f8f9fa;
+        --success: #00c896;
+    }
+    
+    body {
+        background-color: var(--dark);
+        font-family: 'Poppins', sans-serif;
+        color: white;
+        min-height: 100vh;
+    }
+    
+    .gradient-text {
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-weight: 800;
+    }
+    
+    .card {
+        background: rgba(25, 28, 39, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+        /* Increased card height */
+        min-height: 540px;
+    }
+    
+    .card-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background: linear-gradient(90deg, rgba(31, 35, 53, 0.8) 0%, rgba(17, 19, 31, 0.8) 100%);
+    }
+    
+    .card-glow {
+        position: relative;
+    }
+    
+    .card-glow::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        border-radius: 16px 16px 0 0;
+    }
+    
+    .form-control {
+        background-color: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        border-radius: 50px;
+        padding: 12px 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        background-color: rgba(255, 255, 255, 0.12);
+        border-color: var(--primary);
+        color: white;
+        box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.25);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(45deg, var(--primary), var(--accent));
+        border: none;
+        border-radius: 50px;
+        padding: 12px 30px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(58, 134, 255, 0.4);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(58, 134, 255, 0.6);
+        background: linear-gradient(45deg, var(--accent), var(--primary));
+    }
+    
+    .btn-secondary {
+        background: linear-gradient(45deg, var(--secondary), #ff5e78);
+        border: none;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255, 0, 110, 0.3);
+        /* Fixed button text centering */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(255, 0, 110, 0.5);
+        background: linear-gradient(45deg, #ff5e78, var(--secondary));
+    }
+    
+    .url-input-group {
+        position: relative;
+        margin-bottom: 2rem;
+    }
+    
+    .input-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 1.2rem;
+    }
+    
+    .icon-input {
+        padding-left: 50px;
+    }
+    
+    .link-card {
+        background: rgba(19, 22, 31, 0.7);
+        border-radius: 12px;
+        border-left: 4px solid var(--success);
+        transition: all 0.3s ease;
+    }
+    
+    .link-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 200, 150, 0.3);
+    }
+    
+    .copy-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: white;
+        border-radius: 8px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+    
+    .copy-btn:hover {
+        background: var(--success);
+        transform: scale(1.1);
+    }
+    
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1050;
+    }
+    
+    .custom-toast {
+        background: rgba(15, 18, 26, 0.9);
+        backdrop-filter: blur(10px);
+        border-left: 4px solid var(--success);
+        color: white;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .shine-effect {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .shine-effect::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.05) 50%,
+            rgba(255, 255, 255, 0) 100%
+        );
+        transform: rotate(30deg);
+        animation: shine 3s infinite linear;
+    }
+    
+    .original-url-container {
+        background: rgba(15, 18, 26, 0.5);
+        border-radius: 8px;
+        padding: 12px 15px;
+        margin-top: 12px;
+        border-left: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .original-url-label {
+        display: block;
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .original-url-text {
+        word-break: break-all;
+        font-size: 0.9rem;
+        max-height: 60px;
+        overflow-y: auto;
+    }
+    
+    @keyframes shine {
+        0% {
+            transform: rotate(30deg) translateX(-100%);
+        }
+        100% {
+            transform: rotate(30deg) translateX(100%);
+        }
+    }
+    
+    .particles-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: -1;
+    }
+    
+    .particle {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.5;
+        animation: float 15s infinite ease-in-out;
+    }
+    
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0) translateX(0);
+        }
+        25% {
+            transform: translateY(-30px) translateX(15px);
+        }
+        50% {
+            transform: translateY(-15px) translateX(-15px);
+        }
+        75% {
+            transform: translateY(30px) translateX(15px);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .card {
+            margin: 1rem 0;
+        }
+    }
+
+
+</style>
+
+<div class="particles-container">
+    <div class="particle" style="width: 50px; height: 50px; left: 10%; top: 10%; background: radial-gradient(circle, rgba(58, 134, 255, 0.3) 0%, rgba(58, 134, 255, 0) 70%);"></div>
+    <div class="particle" style="width: 80px; height: 80px; left: 70%; top: 20%; background: radial-gradient(circle, rgba(255, 0, 110, 0.2) 0%, rgba(255, 0, 110, 0) 70%); animation-delay: 2s;"></div>
+    <div class="particle" style="width: 120px; height: 120px; left: 40%; top: 60%; background: radial-gradient(circle, rgba(131, 56, 236, 0.15) 0%, rgba(131, 56, 236, 0) 70%); animation-delay: 5s;"></div>
+    <div class="particle" style="width: 40px; height: 40px; left: 90%; top: 40%; background: radial-gradient(circle, rgba(0, 200, 150, 0.25) 0%, rgba(0, 200, 150, 0) 70%); animation-delay: 7s;"></div>
+    <div class="particle" style="width: 70px; height: 70px; left: 20%; top: 80%; background: radial-gradient(circle, rgba(255, 209, 102, 0.2) 0%, rgba(255, 209, 102, 0) 70%); animation-delay: 3s;"></div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-6">
+            <div class="card card-glow mb-4">
+                <div class="card-header py-4">
+                    <h1 class="text-center mb-0">
+                        <span class="gradient-text">URL Shortener</span>
+                    </h1>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-center text-white-50 mb-4">Transform your long, unwieldy URLs into clean, memorable links in seconds</p>
+                    
+                    <form method="post" class="mb-4">
+                        {% csrf_token %}
+                        <div class="url-input-group">
+                            <i class="fas fa-link input-icon"></i>
+                            <input type="url" name="url" class="form-control icon-input" placeholder="Paste your long URL here" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-3 shine-effect">
+                            <i class="fas fa-bolt me-2"></i> Generate Short URL
+                        </button>
+                    </form>
+
+                  
+
+                    
+                    {% if error %}
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i> {{ error }}
+                    </div>
+                    {% endif %}
+                    
+                    {% if short_url %}
+                    <div class="mt-5">
+                        <h5 class="text-white-50 mb-3">
+                            <i class="fas fa-check-circle me-2 text-success"></i> Your shortened URL is ready!
+                        </h5>
+                        
+                        <div class="link-card p-3 mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-truncate me-3">
+                                    <a href="{{ short_url }}" target="_blank" class="text-white text-decoration-none fw-bold">{{ short_url }}</a>
+                                </div>
+                                <button onclick="copyToClipboard('{{ short_url }}')" class="copy-btn" data-bs-toggle="tooltip" title="Copy to clipboard">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="original-url-container">
+                            <span class="original-url-label">Original URL:</span>
+                            <div class="original-url-text">
+                                <a href="{{ original_url }}" target="_blank" class="text-white-50 text-decoration-none">{{ original_url }}</a>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-3 mt-4">
+                            <button onclick="copyToClipboard('{{ short_url }}')" class="btn btn-primary flex-grow-1">
+                                <i class="fas fa-copy me-2"></i> Copy URL
+                            </button>
+                            <a href="{{ short_url }}" target="_blank" class="btn btn-secondary flex-grow-1">
+                                <i class="fas fa-external-link-alt me-2"></i> Visit URL
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <div style="height: 40px;"></div>
+                    <div class="divider mt-4 mb-4" style="height: 1px; background-color: rgba(255, 255, 255, 0.1);"></div>
+                    <div class="text-center text-white-50">
+                        <div class="mb-2">
+                            <i class="fas fa-shield-alt me-2"></i> Trusted by over 50,000 users
+                        </div>
+                        <div class="text-success">
+                            <i class="fas fa-chart-line me-2"></i> 500K+ URLs shortened
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="toast-container">
+    <div class="toast custom-toast align-items-center border-0 fade hide" role="alert" aria-live="assertive" aria-atomic="true" id="copyToast">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="fas fa-check-circle me-2 text-success"></i>
+                URL copied to clipboard!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+            const toast = new bootstrap.Toast(document.getElementById('copyToast'));
+            toast.show();
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.particles-container');
+        
+        for (let i = 0; i < 8; i++) {
+            const size = Math.random() * 60 + 20;
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            const colors = [
+                'rgba(58, 134, 255, 0.2)',
+                'rgba(255, 0, 110, 0.2)',
+                'rgba(131, 56, 236, 0.2)',
+                'rgba(0, 200, 150, 0.2)'
+            ];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            particle.style.background = `radial-gradient(circle, ${color} 0%, ${color.replace('0.2', '0')} 70%)`;
+            particle.style.animationDelay = `${Math.random() * 10}s`;
+            particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+            
+            container.appendChild(particle);
+        }
+    });
+</script>
+
+{% endblock %}
