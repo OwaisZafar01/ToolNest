@@ -20,5 +20,4 @@
 
 <p>Explore the platform, suggest improvements, or contribute to making ToolNest an even better resource for everyone!</p>
 
-<strong>Your feedback is always appreciated!</strong>
 
